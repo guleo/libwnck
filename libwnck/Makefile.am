@@ -11,13 +11,9 @@ noinst_PROGRAMS =		\
 	test-shutdown
 
 if ENABLE_TOOLS
-bin_PROGRAMS +=			\
-	wnckprop		\
-	wnck-urgency-monitor
+bin_PROGRAMS += wnckprop
 else
-noinst_PROGRAMS +=		\
-	wnckprop		\
-	wnck-urgency-monitor
+noinst_PROGRAMS += wnckprop
 endif
 
 AM_CPPFLAGS =					\
@@ -103,7 +99,6 @@ libwnck_4_la_LDFLAGS =								\
 	$(NULL)
 
 wnckprop_SOURCES = wnckprop.c
-wnck_urgency_monitor_SOURCES = wnck-urgency-monitor.c
 test_wnck_SOURCES = test-wnck.c
 test_tasklist_SOURCES = test-tasklist.c
 test_selector_SOURCES = test-selector.c
@@ -112,7 +107,6 @@ test_urgent_SOURCES = test-urgent.c
 test_shutdown_SOURCES = test-shutdown.c
 
 wnckprop_LDADD = $(LIBWNCK_LIBS) $(XLIB_LIBS) ./$(lib_LTLIBRARIES)
-wnck_urgency_monitor_LDADD = $(LIBWNCK_LIBS) ./$(lib_LTLIBRARIES)
 test_wnck_LDADD = $(LIBWNCK_LIBS) ./$(lib_LTLIBRARIES)
 test_tasklist_LDADD = $(LIBWNCK_LIBS) ./$(lib_LTLIBRARIES)
 test_selector_LDADD = $(LIBWNCK_LIBS) ./$(lib_LTLIBRARIES)
