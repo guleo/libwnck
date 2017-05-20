@@ -1174,8 +1174,7 @@ wnck_tasklist_get_button_size (GtkWidget *widget)
   pango_font_metrics_unref (metrics);
   text_width = PANGO_PIXELS (TASKLIST_TEXT_MAX_WIDTH * char_width);
 
-  width = text_width + 2 * TASKLIST_BUTTON_PADDING
-	  + MINI_ICON_SIZE + 2 * TASKLIST_BUTTON_PADDING;
+  width = text_width + MINI_ICON_SIZE;
 
   return width;
 }
@@ -1473,13 +1472,11 @@ wnck_task_size_allocated (GtkWidget     *widget,
   context = gtk_widget_get_style_context (widget);
   gtk_style_context_get_padding (context, &padding);
 
-  min_image_width = MINI_ICON_SIZE +
-                    padding.left + padding.right +
-                    2 * TASKLIST_BUTTON_PADDING;
+  min_image_width = MINI_ICON_SIZE + padding.left + padding.right;
   old_image_visible = gtk_widget_get_visible (task->image);
   old_label_visible = gtk_widget_get_visible (task->label);
 
-  if ((allocation->width < min_image_width + 2 * TASKLIST_BUTTON_PADDING) &&
+  if ((allocation->width < min_image_width) &&
       (allocation->width >= min_image_width)) {
     gtk_widget_show (task->image);
     gtk_widget_hide (task->label);
@@ -3788,10 +3785,13 @@ wnck_task_create_widgets (WnckTask *task, GtkReliefStyle relief)
 
   gtk_widget_show (task->label);
 
-  gtk_box_pack_start (GTK_BOX (hbox), task->image, FALSE, FALSE,
-		      TASKLIST_BUTTON_PADDING);
-  gtk_box_pack_start (GTK_BOX (hbox), task->label, TRUE, TRUE,
-		      TASKLIST_BUTTON_PADDING);
+  gtk_box_pack_start (GTK_BOX (hbox), task->image);
+  g_object_set (task->image, "margin", TASKLIST_BUTTON_PADDING, NULL);
+
+  gtk_box_pack_start (GTK_BOX (hbox), task->label);
+  gtk_widget_set_hexpand (task->label, TRUE);
+  gtk_widget_set_valign (task->label, GTK_ALIGN_FILL);
+  g_object_set (task->label, "margin", TASKLIST_BUTTON_PADDING, NULL);
 
   gtk_container_add (GTK_CONTAINER (task->button), hbox);
   gtk_widget_show (hbox);
