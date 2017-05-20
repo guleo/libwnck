@@ -285,12 +285,14 @@ static void       wnck_task_drag_data_get (GtkWidget          *widget,
 
 static void     wnck_tasklist_finalize      (GObject        *object);
 
-static void     wnck_tasklist_get_preferred_width (GtkWidget *widget,
-                                                   int       *minimum_width,
-                                                   int       *natural_width);
-static void     wnck_tasklist_get_preferred_height (GtkWidget *widget,
-                                                    int       *minimum_height,
-                                                    int       *natural_height);
+static void     wnck_tasklist_measure       (GtkWidget        *widget,
+                                             GtkOrientation    orientation,
+                                             int               for_size,
+                                             int              *minimum,
+                                             int              *natural,
+                                             int              *minimum_baseline,
+                                             int              *natural_baseline);
+
 static void     wnck_tasklist_size_allocate (GtkWidget        *widget,
                                              GtkAllocation    *allocation);
 static void     wnck_tasklist_realize       (GtkWidget        *widget);
@@ -615,8 +617,7 @@ wnck_tasklist_class_init (WnckTasklistClass *klass)
 
   object_class->finalize = wnck_tasklist_finalize;
 
-  widget_class->get_preferred_width = wnck_tasklist_get_preferred_width;
-  widget_class->get_preferred_height = wnck_tasklist_get_preferred_height;
+  widget_class->measure = wnck_tasklist_measure;
   widget_class->size_allocate = wnck_tasklist_size_allocate;
   widget_class->realize = wnck_tasklist_realize;
   widget_class->unrealize = wnck_tasklist_unrealize;
@@ -1396,29 +1397,27 @@ wnck_tasklist_size_request  (GtkWidget      *widget,
 }
 
 static void
-wnck_tasklist_get_preferred_width (GtkWidget *widget,
-                                   int       *minimum_width,
-                                   int       *natural_width)
+wnck_tasklist_measure (GtkWidget      *widget,
+                       GtkOrientation  orientation,
+                       int             for_size,
+                       int            *minimum,
+                       int            *natural,
+                       int            *minimum_baseline,
+                       int            *natural_baseline)
 {
   GtkRequisition req;
 
   wnck_tasklist_size_request (widget, &req);
 
-  *minimum_width = *natural_width = req.width;
+  if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    {
+      *minimum = *natural = req.width;
+    }
+  else
+    {
+      *minimum = *natural = req.height;
+    }
 }
-
-static void
-wnck_tasklist_get_preferred_height (GtkWidget *widget,
-                                   int       *minimum_height,
-                                   int       *natural_height)
-{
-  GtkRequisition req;
-
-  wnck_tasklist_size_request (widget, &req);
-
-  *minimum_height = *natural_height = req.height;
-}
-
 
 /**
  * wnck_tasklist_get_size_hint_list:
